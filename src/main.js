@@ -1,5 +1,5 @@
 const audioElement = document.querySelector("audio")
-const noteNameElement = document.querySeleector("span")
+const noteNameElement = document.querySelector("span")
 
 function startAnalyser(stream) {
   audioElement.srcObject = stream
