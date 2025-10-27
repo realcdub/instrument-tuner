@@ -1,8 +1,12 @@
 const audioElement = document.querySelector("audio")
-const noteNameElement = document.querySelector("span")
+const noteNameElement = document.querySelector("h1")
 
 function calculateCents(frequencyOne, frequencyTwo) {
   return Math.round(1200 * Math.log2(frequencyTwo / frequencyOne))
+}
+
+function calculateKeyNumber(frequency) {
+  return Math.round(12 * Math.log2(frequency / 440) + 49)
 }
 
 function startAnalyser(stream) {
@@ -10,8 +14,8 @@ function startAnalyser(stream) {
 
   const context = new AudioContext()
   const analyser = context.createAnalyser() 
-  const noteNames = ["A", "A#/Bb", "B", "C", "C#/Db", "D", "D#/Eb", "E", "F", "F#/Gb", "G", "G#/Ab"]
-  const noteFrequencies = [27.5, 29.13524, 30.86771, 32.70320, 34.64783, 36.70810, 38.89087, 41.20344, 43.65353, 46.24930, 48.99943, 51.91309]
+  const noteNames = ["A", "A#/Bb", "B", "C", "C#/Db", "D", "D#/Eb", "E", "F", "F#/Gb", "G", "G#/Ab",]
+  const noteFrequencies = [27.5, 29.13524, 30.86771, 32.70320, 34.64783, 36.70810, 38.89087, 41.20344, 43.65353, 46.24930, 48.99943, 25.95654]
 
   let source = context.createMediaStreamSource(stream)
   source.connect(analyser)
@@ -28,16 +32,17 @@ function startAnalyser(stream) {
     }
 
     const frequency = context.sampleRate / 2 / analyser.frequencyBinCount * maxDecibelIndex
-    const keyNumber = Math.round(12 * Math.log2(frequency / 440) + 49)
+    const keyNumber = calculateKeyNumber(frequency)
     const noteIndex = ((keyNumber % noteNames.length) == 0) ? 11 : (keyNumber % noteNames.length) - 1
     const octave = Math.floor(keyNumber / 12)
+    console.log(octave, noteFrequencies[noteIndex])
     const noteName = noteNames[noteIndex]
     const knownFrequency = Math.pow(2, octave) * noteFrequencies[noteIndex]
 
-    const cents = calculateCents(frequency, knownFrequency)
-    noteNameElement.textContent = `Note: ${noteName} Cents: ${cents} Frequency: ${frequency} Known: ${knownFrequency}`
+    const cents = calculateCents(knownFrequency, frequency)
+    noteNameElement.textContent = `Note: ${noteName}${octave} Cents: ${cents} Frequency: ${frequency} Known: ${knownFrequency}`
 
-  }, 500)
+  }, 100)
 }
 
 function getLocalStream() {
