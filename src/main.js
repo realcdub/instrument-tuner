@@ -35,14 +35,15 @@ function startAnalyser(stream) {
     const keyNumber = calculateKeyNumber(frequency)
     const noteIndex = ((keyNumber % noteNames.length) == 0) ? 11 : (keyNumber % noteNames.length) - 1
     const octave = Math.floor(keyNumber / 12)
-    console.log(octave, noteFrequencies[noteIndex])
     const noteName = noteNames[noteIndex]
     const knownFrequency = Math.pow(2, octave) * noteFrequencies[noteIndex]
 
     const cents = calculateCents(knownFrequency, frequency)
-    noteNameElement.textContent = `Note: ${noteName}${octave} Cents: ${cents} Frequency: ${frequency} Known: ${knownFrequency}`
+    console.log(cents)
 
-  }, 100)
+    noteNameElement.textContent = `${noteName}${octave} Cents: ${cents}`
+
+  }, 50)
 }
 
 function getLocalStream() {
