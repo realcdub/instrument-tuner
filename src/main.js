@@ -37,9 +37,7 @@ function startAnalyser(stream) {
     const octave = Math.floor(keyNumber / 12)
     const noteName = noteNames[noteIndex]
     const knownFrequency = Math.pow(2, octave) * noteFrequencies[noteIndex]
-
     const cents = calculateCents(knownFrequency, frequency)
-    console.log(cents)
 
     noteNameElement.textContent = `${noteName}${octave} Cents: ${cents}`
 
